@@ -11,7 +11,15 @@
     stateConfig.$inject = ['$stateProvider'];
 
     function stateConfig($stateProvider) {
-        console.log($stateProvider);
+        $stateProvider.state({
+            name: 'main',
+            url: '/main',
+            templateUrl: 'app/layouts/main/main.html'
+        }).state({
+            name: 'subMain',
+            url: '/subMain',
+            templateUrl: 'app/layouts/sub_main/sub_main.html'
+        });
     }
 
 })();

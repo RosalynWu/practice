@@ -1,0 +1,69 @@
+//img url
+$img-url:"../images/";
+
+//color
+$white: #fff !default;
+$black: #000 !default;
+$gray: #f5f5f5 !default;
+$gray-100: #eee !default;
+$gray-200: #ddd !default;
+$gray-300: #ccc !default;
+$gray-400: #999 !default;
+$gray-500: #666 !default;
+$gray-600: #333 !default;
+
+$teal: #41BEBA !default;
+
+//fonts
+$font-family-base: 'microsoft yahei' !default;
+
+$font-size-base: 12px !default;
+$font-size-md: 14px !default;
+$font-size-lg: 16px !default;
+
+$h1-font-size: $font-size-lg + 20px !default;
+$h2-font-size: $font-size-lg + 14px !default;
+$h3-font-size: $font-size-lg + 10px !default;
+$h4-font-size: $font-size-lg + 6px !default;
+$h5-font-size: $font-size-lg + 2px !default;
+$h6-font-size: $font-size-md !default;
+
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-bold: 700 !default;
+$font-weight-base: $font-weight-normal !default;
+
+//border and border radius sizes
+$border-width: 1px !default;
+$border-color: $gray-200 !default;
+
+$border-radius: 4px !default;
+$border-radius-md: 6px !default;
+$border-radius-lg: 8px !default;
+
+$box-shadow: 0 2px 2px rgba($black, .075) !default;
+$box-shadow-md: 0 8px 16px rgba($black, .15) !default;
+
+//z-index
+$zindex-dropdown:                   1000 !default;
+$zindex-sticky:                     1020 !default;
+$zindex-fixed:                      1030 !default;
+$zindex-modal-backdrop:             1040 !default;
+$zindex-modal:                      1050 !default;
+$zindex-popover:                    1060 !default;
+$zindex-tooltip:                    1070 !default;
+
+$space: 5px !default;
+$spaces: () !default;
+$spaces: map_merge((
+  0: 0,
+  1: $space,
+  2: $space * 2,
+  3: $space * 3,
+  4: $space * 4
+),$spaces);
+
+// options (global styling by enabling or disabling optional features)
+$enable-caret: true !default;
+$enable-rounded: true !default;
+$enable-shadows: false !default;

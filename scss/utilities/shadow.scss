@@ -1,0 +1,15 @@
+.box-shadow{
+  -webkit-box-shadow: $box-shadow;
+  -moz-box-shadow: $box-shadow;
+  box-shadow: $box-shadow;
+}
+.box-shadow-md{
+  -webkit-box-shadow: $box-shadow-md;
+  -moz-box-shadow: $box-shadow-md;
+  box-shadow: $box-shadow-md;
+}
+.box-shadow-none{
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}

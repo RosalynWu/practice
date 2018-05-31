@@ -30,3 +30,16 @@
     padding: 15px 15px 15px 215px;
   }
 }
+//TODO list-group
+.list-group{
+  margin-top: 31px;
+  .list-group-item{
+    padding: 5px 10px;
+    text-align: center;
+    cursor: pointer;
+    &.active{
+      background-color: $gray-200;
+      color: $gray-500;
+    }
+  }
+}

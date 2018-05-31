@@ -13,13 +13,12 @@
     <div class="agl-content">
         <div class="agl-sidebar">
             <div class="list-group">
-                <div class="list-group-item">dropdown</div>
-                <div class="list-group-item">其他1</div>
-                <div class="list-group-item">其他2</div>
+                <div class="list-group-item" ui-sref="dropdown" ui-sref-active="active">dropdown</div>
+                <div class="list-group-item" ui-sref-active="active">其他1</div>
+                <div class="list-group-item" ui-sref-active="active">其他2</div>
             </div>
         </div>
         <div class="agl-main">
-            123
             <div class="ui-view"></div>
         </div>
     </div>
@@ -28,9 +27,17 @@
     <script type="text/javascript" src="../node_modules/@uirouter/angularjs/release/angular-ui-router.js"></script>
     <!--bower component end-->
 
+    <!--components-->
+    <script type="text/javascript" src="templates/position/position.js"></script>
+    <script type="text/javascript" src="templates/multiMap/multiMap.js"></script>
+    <script type="text/javascript" src="templates/dropdown/dropdown.js"></script>
+    <script type="text/javascript" src="templates/components.js"></script>
+    <!--components end-->
+
     <!--app js-->
-    <script type="text/javascript" src="js/index.js"></script>
-    <!--<script type="text/javascript" src="js/components.js"></script>-->
+    <script type="text/javascript" src="js/app.module.js"></script>
+    <script type="text/javascript" src="js/app.state.js"></script>
+    <script type="text/javascript" src="js/testCtrl.js"></script>
     <!--app js end-->
 </body>
 </html>

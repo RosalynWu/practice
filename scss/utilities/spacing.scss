@@ -1,0 +1,19 @@
+@each $prop, $abbr in (margin:margin, padding:padding){
+  @each $space, $value in $spaces{
+    .#{$abbr}-#{$space}{
+      #{$abbr}: $value !important;
+    }
+    .#{$abbr}-top-#{$space}{
+      #{$abbr}-top: $value !important;
+    }
+    .#{$abbr}-right-#{$space}{
+      #{$abbr}-right: $value !important;
+    }
+    .#{$abbr}-bottom-#{$space}{
+      #{$abbr}-bottom: $value !important;
+    }
+    .#{$abbr}-left-#{$space}{
+      #{$abbr}-left: $value !important;
+    }
+  }
+}

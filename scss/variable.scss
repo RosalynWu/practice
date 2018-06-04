@@ -44,6 +44,19 @@ $border-radius-lg: 8px !default;
 $box-shadow: 0 2px 2px rgba($black, .075) !default;
 $box-shadow-md: 0 8px 16px rgba($black, .15) !default;
 
+//dropdowns
+$dropdown-min-width: 150px !default;
+$dropdown-padding-y: 10px !default;
+$dropdown-space: 2px !default;
+$dropdown-bg: $white !default;
+$dropdown-border-color: $gray-200 !default;
+$dropdown-border-width: $border-width !default;
+$dropdown-divider-bg: $gray !default;
+$dropdown-box-shadow: $box-shadow !default;
+$dropdown-border-radius: $border-radius !default;
+$dropdown-header-color: $gray-100 !default;
+
+
 //z-index
 $zindex-dropdown:                   1000 !default;
 $zindex-sticky:                     1020 !default;
@@ -53,6 +66,8 @@ $zindex-modal:                      1050 !default;
 $zindex-popover:                    1060 !default;
 $zindex-tooltip:                    1070 !default;
 
+
+//space
 $space: 5px !default;
 $spaces: () !default;
 $spaces: map_merge((
@@ -62,6 +77,9 @@ $spaces: map_merge((
   3: $space * 3,
   4: $space * 4
 ),$spaces);
+
+//caret
+$caret-width: 5px !default;
 
 // options (global styling by enabling or disabling optional features)
 $enable-caret: true !default;

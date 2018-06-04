@@ -21,23 +21,33 @@
     aglDropdownService.$inject = ['$document','$rootScope','$$multiMap'];
     function aglDropdownService($document, $rootScope, $$multiMap){
 
+
     }
 
-    aglDropdownController.$inject = ['$scope', '$element', '$attrs', '$parse'];
-    function aglDropdownController($scope, $element, $attrs, $parse){
+    aglDropdownController.$inject = ['$scope', '$element', '$attrs', '$parse', 'AglDropdownConfig','$document'];
+    function aglDropdownController($scope, $element, $attrs, $parse, dropdownConfig, $document){
         var self = this,
             scope = $scope.$new(),
+            templateScope,
+            appendToOpenClass = dropdownConfig.appendToOpenClass,
+            openClass = dropdownConfig.openClass,
             getIsOpen,
-            setIsOpen = angular.noop;
+            setIsOpen = angular.noop,
+            keynavEnabled = false,
+            body = $document.find('body');
 
         $element.addClass('dropdown');
 
         this.init = function(){
             if($attrs.isOpen){
                 getIsOpen = $parse($attrs.isOpen);
-                console.log(getIsOpen);
                 setIsOpen = getIsOpen.assign;
+
+                $scope.$watch(getIsOpen, function(value){
+                    scope.isOpen = !!value;
+                })
             }
+            //keynavEnabled = angular.isDefined($attrs.keyboardNav);
         };
 
         this.isOpen = function(){

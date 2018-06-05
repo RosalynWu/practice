@@ -50,9 +50,36 @@
             //keynavEnabled = angular.isDefined($attrs.keyboardNav);
         };
 
+        this.toggle = function(open){
+            scope.isOpen = arguments.length ? !!open : !scope.isOpen;
+            if(angular.isFunction(setIsOpen)){
+                setIsOpen(scope, scope.isOpen);
+            }
+            return scope.isOpen;
+        };
+
         this.isOpen = function(){
             return scope.isOpen;
+        };
+
+        scope.getToggleElement = function(){
+            return self.toggleElement;
+        };
+
+        scope.getAutoClose = function(){
+            return $attrs.autoClose || 'always'; //or 'outsideClick' or 'disabled'
+        };
+
+        scope.getElement = function(){
+            return $element;
+        };
+
+        scope.isKeyNavEnabled = function(){
+            return keynavEnabled;
         }
+
+
+
     }
 
     aglDropdown.$inject = [];
@@ -70,7 +97,33 @@
         return{
             require: '?^aglDropdown',
             link: function(scope, element, attrs, dropdownCtrl){
+                if(!dropdownCtrl){
+                    return;
+                }
+
                 element.addClass('dropdown-toggle');
+
+                dropdownCtrl.toggleElement = element;
+
+                var toggleDropdown = function(event){
+                    event.preventDefault();
+                    if(!element.hasClass('disabled') && !attrs.disabled){
+                        scope.$apply(function(){
+                            dropdownCtrl.toggle();
+                        })
+                    }
+                };
+
+                element.on('click',toggleDropdown);
+
+                element.attr({'aria-expanded': false});
+                scope.$watch(dropdownCtrl.isOpen, function(isOpen) {
+                    element.attr('aria-expanded', !!isOpen);
+                });
+
+                scope.$on('$destroy', function() {
+                    element.off('click', toggleDropdown);
+                })
             }
         }
     }
@@ -81,7 +134,20 @@
             restrict: 'A',
             require: '?^aglDropdown',
             link: function(scope, element, attrs, dropdownCtrl){
+                if(!dropdownCtrl){
+                    return;
+                }
+
                 element.addClass('dropdown-menu');
+
+                var tplUrl = attrs.templateUrl;
+                if(tplUrl){
+                    dropdownCtrl.dropdownMenuTemplateUrl = tplUrl;
+                }
+                if(!dropdownCtrl.dropdownMenu){
+                    dropdownCtrl.dropdownMenu = element;
+                }
+
             }
         }
     }

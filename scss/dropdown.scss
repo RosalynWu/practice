@@ -24,6 +24,11 @@
   @include border-radius($dropdown-border-radius);
   @include box-shadow($box-shadow);
 }
+.open{
+  >.dropdown-menu{
+    display: block;
+  }
+}
 .dropdown-menu-right{
   right: 0;
   left: auto;
@@ -74,7 +79,7 @@
     right: auto;
     bottom: auto;
   }
-  &.open,&.show{
+  &.show{
     display: block;
   }
 }

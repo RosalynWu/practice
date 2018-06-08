@@ -24,8 +24,8 @@
 
     }
 
-    aglDropdownController.$inject = ['$scope', '$element', '$attrs', '$parse', 'AglDropdownConfig','$document'];
-    function aglDropdownController($scope, $element, $attrs, $parse, dropdownConfig, $document){
+    aglDropdownController.$inject = ['$scope', '$element', '$attrs', '$parse', 'AglDropdownConfig','$document','AglPosition'];
+    function aglDropdownController($scope, $element, $attrs, $parse, dropdownConfig, $document, $position){
         var self = this,
             scope = $scope.$new(),
             templateScope,
@@ -34,6 +34,7 @@
             getIsOpen,
             setIsOpen = angular.noop,
             keynavEnabled = false,
+            selectedOption = null,
             body = $document.find('body');
 
         $element.addClass('dropdown');
@@ -76,8 +77,121 @@
 
         scope.isKeyNavEnabled = function(){
             return keynavEnabled;
+        };
+
+        scope.focusDropdownEntry = function(keyCode){
+            var elems = self.dropdownMenu ? angular.element(self.dropdownMenu).find('a') : $element.find('ul').eq(0).find('a');
+
+            switch (keyCode){
+                case 40: {
+                    if(!angular.isNumber(self.selectedOption)){
+                        self.selectedOption = 0;
+                    }else{
+                        self.selectedOption = self.selectedOption === elems.length - 1 ?
+                            self.selectedOption : self.selectedOption + 1;
+                    }
+                    break;
+                }
+                case 38:{
+                    if(!angular.isNumber(self.selectedOption)){
+                        self.selectedOption = elems.length - 1;
+                    }else{
+                        self.selectedOption = self.selectedOption === 0 ?
+                            0 : self.selectedOption - 1;
+                    }
+                    break;
+                }
+            }
+
+            elems[self.selectedOption].focus();
+        };
+
+        scope.getDropdownElement = function(){
+            return self.dropdownMenu;
+        };
+
+        scope.focusToggleElement = function(){
+            if(self.toggleElement){
+                self.toggleElement[0].focus();
+            }
+        };
+
+        function removeDropdownMenu(){
+            $element.append(self.dropdownMenu);
         }
 
+        scope.$watch('isOpen',function(isOpen, wasOpen){
+            var appendTo = null,
+                appendToBody = false;
+
+            if(angular.isDefined($attrs.dropdownAppendTo)){
+                var appendToEl = $parse($attrs.dropdownAppendTo)(scope);
+                if(appendToEl){
+                    appendTo = angular.element(appendToEl);
+                }
+            }
+
+            if(angular.isDefined($attrs.dropdownAppendToBody)){
+                var appendToBodyValue = $parse($attrs.dropdownAppendToBody)(scope);
+                if(appendToBodyValue !== false){
+                    appendToBody = true;
+                }
+            }
+
+            if(appendToBody && !appendTo){
+                appendTo = body;
+            }
+
+            if(appendTo && self.dropdownMenu){
+                if(isOpen){
+                    appendTo.append(self.dropdownMenu);
+                    $element.on('$destroy', removeDropdownMenu);
+                }else{
+                    $element.off('$destroy', removeDropdownMenu);
+                    removeDropdownMenu();
+                }
+            }
+
+            if(appendTo && self.dropdownMenu){
+                var pos = $position.positionElements($element,self.dropdownMenu, 'bottom-left',true),
+                    css,
+                    rightalign,
+                    scrollbarPadding,
+                    scrollbarWidth = 0;
+
+                css = {
+                    top: pos.top + 'px',
+                    display: isOpen ? 'block' : 'none'
+                };
+                rightalign = self.dropdown.hasClass('dropdown-menu-right');
+                if(!rightalign){
+                    css.left = pos.left + 'px';
+                    css.right = 'auto';
+                }else{
+                    css.left = 'auto';
+                    scrollbarPadding = $position.scrollbarPadding(appendTo);
+                    if(scrollbarPadding.heightOverflow && scrollbarPadding.scrollbarWidth){
+                        scrollbarWidth = scrollbarPadding.scrollbarWidth;
+                    }
+                    css.right = window.innerWidth - scrollbarWidth - (pos.left + $element.prop('offsetWidth')) + 'px'
+                }
+
+                if(!appendToBody){
+                    var appendOffset = $position.offset(appendTo);
+                    css.top = pos.top - appendOffset.top + 'px';
+                    if(!rightalign){
+                        css.left = pos.left - appendOffset.left + 'px';
+                    }else{
+                        css.right = window.innerWidth - (pos.left - appendOffset.left + $element.prop('offsetWidth')) + 'px';
+                    }
+                }
+
+                self.dropdownMenu.css(css);
+            }
+
+
+
+        })
 
 
     }

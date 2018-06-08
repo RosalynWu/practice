@@ -4,6 +4,6 @@
 (function(){
     'use strict';
 
-    angular.module('agl.components',['agl.dropdown']);
+    angular.module('agl.components',['agl.dropdown','agl.share']);
 
 })();

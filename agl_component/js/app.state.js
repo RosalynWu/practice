@@ -13,11 +13,16 @@
     function stateConfig($stateProvider) {
         $stateProvider
             .state({
-            name: 'dropdown',
-            url: '/dropdown',
-            templateUrl: 'tpl/dropdown.html',
-            controller: 'TestController'
-        })
+                name: 'dropdown',
+                url: '/dropdown',
+                templateUrl: 'tpl/dropdown.html',
+                controller: 'TestController'
+            })
+            .state({
+                name: 'share',
+                url: '/share',
+                templateUrl: 'tpl/share.html'
+            })
     }
 
 })();

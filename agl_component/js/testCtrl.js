@@ -10,7 +10,6 @@
         .controller('TestController',testController);
     testController.$inject = ['$scope','$parse','$templateRequest'];
     function testController($scope, $parse, $templateRequest){
-        console.log($templateRequest);
         $scope.add = function(x,y){
             return x+y;
         }

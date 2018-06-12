@@ -1,12 +1,20 @@
 <!--dropdown-->
 <div>
-    <div agl-dropdown >
+    <div agl-dropdown is-open="status.isOpen">
         <div agl-dropdown-toggle>dropdown-toggle</div>
-        <ul agl-dropdown-menu>
-            <li><a href="">选项1</a></li>
-            <li><a href="">选项2</a></li>
-            <li><a href="">选项3</a></li>
-            <li><a href="">选项4</a></li>
-        </ul>
+        <!--<ul agl-dropdown-menu>-->
+            <!--<li ng-repeat="item in items" ng-click="testClick()"><a href="">{{item}}</a></li>-->
+        <!--</ul>-->
+        <ul class="dropdown-menu" agl-dropdown-menu template-url="dropdown.html"></ul>
     </div>
+    <button style="margin-top: 300px;" ng-click="toggleDropdown($event)">点击这个出现下拉展开收起</button>
+    <script type="text/ng-template" id="dropdown.html">
+        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+            <li role="menuitem"><a href="#">Action in Template</a></li>
+            <li role="menuitem"><a href="#">Another action in Template</a></li>
+            <li role="menuitem"><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li role="menuitem"><a href="#">Separated link in Template</a></li>
+        </ul>
+    </script>
 </div>

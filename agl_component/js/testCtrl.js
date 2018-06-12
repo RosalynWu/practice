@@ -6,36 +6,22 @@
 
     angular
         .module('aglComponents')
-        .directive('testDirective',testDirective)
         .controller('TestController',testController);
-    testController.$inject = ['$scope','$parse','$templateRequest'];
-    function testController($scope, $parse, $templateRequest){
-        $scope.add = function(x,y){
-            return x+y;
-        }
+    testController.$inject = ['$scope'];
+    function testController($scope){
+        $scope.items = ['选项1', '选项2', '选项3', '选项4'];
 
+        $scope.testClick = function(){
+            console.log('点击事件触发了');
+        };
+        $scope.status = {
+            isOpen:false
+        };
+        $scope.toggleDropdown = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.status.isOpen = !$scope.status.isOpen;
+        };
     }
-    testDirective.$inject = [];
-    function testDirective(){
-        return{
-            restrict: "E",
-            template:"{{result}} <input ng-model=result>",
-            scope:{
-                localFun: "&fn"
-            },
-            link: function(scope,elem, attr){
-                console.log(attr);
-                attr.$set('ngModal','new value');
-                attr.$observe('ngModal',function(value){
-                    console.log('这是变化的' + value)
-                });
-                scope.result = scope.localFun({
-                    x:5,
-                    y:7
-                })
-            }
-        }
-    }
-
 
 })();

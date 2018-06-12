@@ -21,11 +21,132 @@
     aglDropdownService.$inject = ['$document','$rootScope','$$multiMap'];
     function aglDropdownService($document, $rootScope, $$multiMap){
 
+        var openScope = null;
+        var openedContainers = $$multiMap.createNew();
+
+        this.isOnlyOpen = function(dropdownScope, appendTo){
+            var openedDropdowns = openedContainers.get(appendTo);
+            if(openedDropdowns) {
+                var openDropdown = openedDropdowns.reduce(function(toClose, dropdown){
+                    if(dropdown.scope === dropdownScope){
+                        return dropdown;
+                    }
+                    return toClose;
+                },{});
+                if(openDropdown){
+                    return openedDropdowns.length === 1;
+                }
+            }
+            return false;
+        };
+
+        this.open = function(dropdownScope, element, appendTo){
+            if(!openScope){
+                $document.on('click',closeDropdown);
+            }
+            if(openScope && openScope !== dropdownScope){
+                openScope.isOpen = false;
+            }
+
+            openScope = dropdownScope;
+
+            if(!appendTo){
+                return;
+            }
+
+            var openedDropdowns = openedContainers.get(appendTo);
+            if(openedDropdowns){
+                var openedScopes = openedDropdowns.map(function(dropdown){
+                    return dropdown.scope;
+                });
+                if(openedScopes.indexOf(dropdownScope) === -1){
+                    openedContainers.put(appendTo,{
+                        scope: dropdownScope
+                    })
+                }
+            }
+
+        };
+
+        this.close = function(dropdownScope, element, appendTo){
+            if(openScope === dropdownScope){
+                $document.off('click',closeDropdown);
+                $document.off('keydown',this.keybindFilter);
+                openScope = null;
+            }
+            if(!appendTo){
+                return;
+            }
+
+            var openedDropdowns = openedContainers.get(appendTo);
+            if(openedDropdowns){
+                var dropdownToClose = openedDropdowns.reduce(function(toClose, dropdown){
+                    if(dropdown.scope === dropdownScope){
+                        return dropdown;
+                    }
+                    return toClose;
+                }, {});
+                if(dropdownToClose){
+                    openedContainers.remove(appendTo, dropdownToClose);
+                }
+            }
+
+        };
+
+        var closeDropdown = function(evt){
+            //this method may still be called during the same mouse event that
+            //unbound this event handler. So check openScope before proceeding.
+            if( !openScope || !openScope.isOpen){
+                return;
+            }
+            if(evt && openScope.getAutoClose() === 'disabled'){
+                return;
+            }
+            if(evt && evt.which === 3 ){
+                return;
+            }
+            var toggleElement = openScope.getToggleElement();
+            if(evt && toggleElement && toggleElement[0].contains(evt.target)){
+                return;
+            }
+            var dropdownElement = openScope.getToggleElement();
+            if(evt && openScope.getAutoClose() === 'outsideClick' && dropdownElement &&  dropdownElement[0].contains(evt.target)){
+                return;
+            }
+            openScope.focusToggleElement();
+            openScope.isOpen = false;
+
+            if(!$rootScope.$$phase){
+                openScope.$apply();
+            }
+
+        };
+
+        this.keybindFilter = function(evt){
+            if(!openScope){
+                return;
+            }
+
+            var dropdownElement = openScope.getDropdownElement();
+            var toggleElement = openScope.getToggleElement();
+            var dropdownElementTargeted = dropdownElement && dropdownElement[0].contains(evt.target);
+            var toggleElementTargeted = toggleElement && toggleElement[0].contains(evt.target);
+            if(evt.which === 27){
+                evt.stopPropagation();
+                openScope.focusToggleElement();
+                closeDropdown();
+            }else if(openScope.isKeyNavEnabled() && [38, 40].indexOf(evt.which) !== -1 && openScope.isOpen && (dropdownElementTargeted || toggleElementTargeted) ){
+                evt.preventDefault();
+                evt.stopPropagation();
+                openScope.focusDropdownEntry(evt.which);
+            }
+        };
+
 
     }
 
-    aglDropdownController.$inject = ['$scope', '$element', '$attrs', '$parse', 'AglDropdownConfig','$document','AglPosition'];
-    function aglDropdownController($scope, $element, $attrs, $parse, dropdownConfig, $document, $position){
+    aglDropdownController.$inject = ['$scope', '$compile', '$element', '$attrs', '$parse', 'AglDropdownConfig','$document','AglPosition','AglDropdownService','$animate','$templateRequest'];
+    function aglDropdownController($scope, $compile, $element, $attrs, $parse, dropdownConfig, $document, $position, dropdownService, $animate, $templateRequest){
         var self = this,
             scope = $scope.$new(),
             templateScope,
@@ -33,6 +154,7 @@
             openClass = dropdownConfig.openClass,
             getIsOpen,
             setIsOpen = angular.noop,
+            toggleInvoker = $attrs.onToggle ? $parse($attrs.onToggle) : angular.noop,
             keynavEnabled = false,
             selectedOption = null,
             body = $document.find('body');
@@ -48,7 +170,7 @@
                     scope.isOpen = !!value;
                 })
             }
-            //keynavEnabled = angular.isDefined($attrs.keyboardNav);
+            keynavEnabled = angular.isDefined($attrs.keyboardNav);
         };
 
         this.toggle = function(open){
@@ -163,7 +285,7 @@
                     top: pos.top + 'px',
                     display: isOpen ? 'block' : 'none'
                 };
-                rightalign = self.dropdown.hasClass('dropdown-menu-right');
+                rightalign = self.dropdownMenu.hasClass('dropdown-menu-right');
                 if(!rightalign){
                     css.left = pos.left + 'px';
                     css.right = 'auto';
@@ -189,7 +311,59 @@
                 self.dropdownMenu.css(css);
             }
 
+            var openContainer = appendTo ? appendTo : $element;
+            var dropdownOpenClass = appendTo ? appendToOpenClass : openClass;
+            var hasOpenClass = openContainer.hasClass(dropdownOpenClass);
+            var isOnlyOpen = dropdownService.isOnlyOpen($scope, appendTo);
 
+            if(hasOpenClass === !isOpen){
+                var toggleClass;
+                if(appendTo){
+                    toggleClass = !isOnlyOpen ? 'addClass' : 'removeClass';
+                }else{
+                    toggleClass = isOpen ? 'addClass' : 'removeClass';
+                }
+                $animate[toggleClass](openContainer, dropdownOpenClass).then(function(){
+                    if(angular.isDefined(isOpen) && isOpen !==wasOpen){
+                        toggleInvoker($scope,{open: !!isOpen});
+                    }
+                })
+            }
+
+            if(isOpen){
+                if(self.dropdownMenuTemplateUrl){
+                    $templateRequest(self.dropdownMenuTemplateUrl).then(function(tplContent){
+                        templateScope = scope.$new();
+                        $compile(tplContent.trim())(templateScope, function(dropdownElement){
+                            var newEl = dropdownElement;
+                            self.dropdownMenu.replaceWith(newEl);
+                            self.dropdownMenu = newEl;
+                            $document.on('keydown', dropdownService.keybindFilter);
+                        })
+                    })
+                }else{
+                    $document.on('keydown',dropdownService.keybindFilter);
+                }
+
+                scope.focusToggleElement();
+
+                dropdownService.open(scope, $element, appendTo)
+            } else{
+                dropdownService.close(scope, $element, appendTo);
+                if(self.dropdownMenuTemplateUrl){
+                    if(templateScope){
+                        templateScope.$destroy();
+                    }
+                    var newEl = angular.element('<ul class="dropdown-menu"></ul>');
+                    self.dropdownMenu.replaceWith(newEl);
+                    self.dropdownMenu = newEl;
+                }
+                self.selectedOption = null;
+            }
+
+            if(angular.isFunction(setIsOpen)){
+                setIsOpen($scope, isOpen);
+            }
 
         })
 

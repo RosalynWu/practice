@@ -11,6 +11,11 @@
     function testController($scope){
         $scope.items = ['选项1', '选项2', '选项3', '选项4'];
 
+
+        //$http.get('http://10.6.23.13:8080/api/logs?page=0&size=5&customCode=&productCode=&productVersionCode=&logContent=&logSubmitTimeStart=&logSubmitTimeEnd=').then(function(response){
+        //    console.log(response)
+        //});
+
         $scope.testClick = function(){
             console.log('点击事件触发了');
         };

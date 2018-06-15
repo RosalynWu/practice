@@ -122,16 +122,19 @@
         };
     }
 
-    aglDropdownImitateController.$inject = ['$scope', '$element', '$attrs','$document','$parse','aglDropdownImitateService','aglDropdownImitateConfig'];
-    function aglDropdownImitateController($scope, $element, $attrs, $document, $parse, aglDropdownImitateService, aglDropdownImitateConfig){
+    aglDropdownImitateController.$inject = ['$scope', '$element', '$attrs','$document','$compile','$parse','$animate','aglDropdownImitateService','aglDropdownImitateConfig','AglPosition','$templateRequest'];
+    function aglDropdownImitateController($scope, $element, $attrs, $document, $compile, $parse, $animate, aglDropdownImitateService, aglDropdownImitateConfig, aglPosition, $templateRequest){
         var self = this,
             scope = $scope.$new(),
             appendToOpenClass = aglDropdownImitateConfig.appendToOpenClass,
             openClass = aglDropdownImitateConfig.openClass,
+            templateScope,
             getIsOpen,
             setIsOpen = angular.noop,
             toggleInvoker = $attrs.onToggle ? $parse($attrs.onToggle) : angular.noop,
             body = $document.find('body');
+
+        $element.addClass('dropdown');
 
         scope.getToggleElement = function(){
             return self.toggleElement;
@@ -148,7 +151,6 @@
         scope.focusToggleElement = function(){
             if(self.toggleElement){
                 self.toggleElement[0].focus();
-                console.log('toggle聚焦啦');
             }
         };
 
@@ -161,15 +163,15 @@
 
 
 
-        //this.init = function(){
-        //    if($attrs.isOpen){
-        //        getIsOpen = $parse($attrs.isOpen);
-        //        setIsOpen = getIsOpen.assign;
-        //        $scope.$watch(getIsOpen, function(value){
-        //            scope.isOpen = !!value;
-        //        })
-        //    }
-        //};
+        this.init = function(){
+            if($attrs.isOpen){
+                getIsOpen = $parse($attrs.isOpen);
+                setIsOpen = getIsOpen.assign;
+                $scope.$watch(getIsOpen, function(value){
+                    scope.isOpen = !!value;
+                })
+            }
+        };
 
         this.toggle = function(open){
             scope.isOpen = arguments.length ? !!open : !scope.isOpen;
@@ -185,7 +187,7 @@
 
         scope.$watch('isOpen',function(isOpen,wasOpen){
             var appendTo = null,
-                appendTobody = false;
+                appendToBody = false;
             if(angular.isDefined($attrs.dropdownAppendTo)){
                 var appendToEl = $parse($attrs.dropdownAppendTo)(scope);
                 if(appendToEl){
@@ -196,23 +198,69 @@
             if(angular.isDefined($attrs.dropdownAppendToBody)){
                 var appendToBodyValue = $parse($attrs.dropdownAppendToBody)(scope);
                 if(appendToBodyValue !== false){
-                    appendTobody = true;
+                    appendToBody = true;
                 }
             }
 
-            if(appendTobody && !appendTo){
+            if(appendToBody && !appendTo){
                 appendTo = body;
             }
 
-            //if(appendTo && self.dropdownMenu){
-            //    if(isOpen){
-            //        appendTo.append(self.dropdownMenu);
-            //        $element.on('$destroy',removeDropdownMenu);
-            //    }else{
-            //        $element.off('$destroy',removeDropdownMenu);
-            //        removeDropdownMenu();
-            //    }
-            //}
+            if(appendTo && self.dropdownMenu){
+                if(isOpen){
+                    appendTo.append(self.dropdownMenu);
+                    $element.on('$destroy',removeDropdownMenu);
+                }else{
+                    $element.off('$destroy',removeDropdownMenu);
+                    removeDropdownMenu();
+                }
+            }
+
+            if(appendTo && self.dropdownMenu){
+                var pos = aglPosition.positionElements($element, self.dropdownMenu, 'bottom-left', true),
+                    css,
+                    rightalign,
+                    scrollbarPadding,
+                    scrollbarWidth = 0;
+
+                css = {
+                    top: pos.top + 'px',
+                    display: isOpen ? 'block' : 'none'
+                };
+
+                rightalign = self.dropdownMenu.hasClass('dropdown-menu-right');
+                if (!rightalign) {
+                    css.left = pos.left + 'px';
+                    css.right = 'auto';
+                } else {
+                    css.left = 'auto';
+                    scrollbarPadding = aglPosition.scrollbarPadding(appendTo);
+
+                    if (scrollbarPadding.heightOverflow && scrollbarPadding.scrollbarWidth) {
+                        scrollbarWidth = scrollbarPadding.scrollbarWidth;
+                    }
+
+                    css.right = window.innerWidth - scrollbarWidth -
+                    (pos.left + $element.prop('offsetWidth')) + 'px';
+                }
+
+                // Need to adjust our positioning to be relative to the appendTo container
+                // if it's not the body element
+                if (!appendToBody) {
+                    var appendOffset = aglPosition.offset(appendTo);
+
+                    css.top = pos.top - appendOffset.top + 'px';
+
+                    if (!rightalign) {
+                        css.left = pos.left - appendOffset.left + 'px';
+                    } else {
+                        css.right = window.innerWidth -
+                        (pos.left - appendOffset.left + $element.prop('offsetWidth')) + 'px';
+                    }
+                }
+
+                self.dropdownMenu.css(css);
+            }
 
 
 
@@ -222,14 +270,47 @@
             var isOnlyOpen = aglDropdownImitateService.isOnlyOpen($scope , appendTo);
 
             if(hasOpenClass === !isOpen){
-
+                var toggleClass;
+                if(appendTo){
+                    toggleClass = !isOnlyOpen ? 'addClass' : 'removeClass';
+                }else{
+                    toggleClass = isOpen ? 'addClass' : 'removeClass';
+                }
+                $animate[toggleClass](openContainer, dropdownOpenClass).then(function(){
+                    if(angular.isDefined(isOpen) && isOpen !== wasOpen){
+                        toggleInvoker($scope,{open: !!isOpen});
+                    }
+                });
             }
 
+
             if(isOpen){
+                if (self.dropdownMenuTemplateUrl) {
+                    $templateRequest(self.dropdownMenuTemplateUrl).then(function(tplContent) {
+                        templateScope = scope.$new();
+                        $compile(tplContent.trim())(templateScope, function(dropdownElement) {
+                            var newEl = dropdownElement;
+                            self.dropdownMenu.replaceWith(newEl);
+                            self.dropdownMenu = newEl;
+                        });
+                    });
+                }
                 scope.focusToggleElement();
                 aglDropdownImitateService.open(scope, $element, appendTo);
             }else{
                 aglDropdownImitateService.close(scope, $element, appendTo);
+                if (self.dropdownMenuTemplateUrl) {
+                    if (templateScope) {
+                        templateScope.$destroy();
+                    }
+                    var newEl = angular.element('<ul class="dropdown-menu"></ul>');
+                    self.dropdownMenu.replaceWith(newEl);
+                    self.dropdownMenu = newEl;
+                }
+            }
+
+            if(angular.isFunction(setIsOpen)){
+                setIsOpen($scope, isOpen);
             }
         })
     }
@@ -239,7 +320,7 @@
         return{
             controller: 'aglDropdownImitateController',
             link: function(scope, element, attrs, dropdownCtrl){
-                //dropdownCtrl.init();
+                dropdownCtrl.init();
             }
         }
     }

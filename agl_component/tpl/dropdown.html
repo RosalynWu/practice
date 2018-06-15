@@ -1,15 +1,15 @@
 <!--dropdown-->
 <div>
-    <div agl-dropdown is-open="status.isOpen">
+    <div agl-dropdown >
         <div agl-dropdown-toggle>下拉1(复制)</div>
-        <!--<ul agl-dropdown-menu>-->
-            <!--<li ng-repeat="item in items" ng-click="testClick()"><a href="">{{item}}</a></li>-->
-        <!--</ul>-->
-        <ul class="dropdown-menu" agl-dropdown-menu template-url="dropdown.html"></ul>
+        <ul agl-dropdown-menu>
+            <li ng-repeat="item in items" ng-click="testClick()"><a href="">{{item}}</a></li>
+        </ul>
+        <!--<ul class="dropdown-menu" agl-dropdown-menu template-url="dropdown.html"></ul>-->
     </div>
     <button style="margin-top: 300px;" ng-click="toggleDropdown($event)">点击这个出现下拉展开收起</button>
     <script type="text/ng-template" id="dropdown.html">
-        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+        <ul class="dropdown-menu" agl-dropdown-menu-imitate role="menu">
             <li role="menuitem"><a href="#">Action in Template</a></li>
             <li role="menuitem"><a href="#">Another action in Template</a></li>
             <li role="menuitem"><a href="#">Something else here</a></li>
@@ -25,10 +25,9 @@
         </ul>
     </div>
 
-    <div agl-dropdown-imitate>
+    <div agl-dropdown-imitate  is-open="status.isOpen">
         <div agl-dropdown-toggle-imitate>下拉(模仿)</div>
-        <ul agl-dropdown-menu-imitate>
-            <li><a href="">下拉菜单</a></li>
+        <ul agl-dropdown-menu-imitate class="dropdown-menu" template-url="dropdown.html">
         </ul>
     </div>
 

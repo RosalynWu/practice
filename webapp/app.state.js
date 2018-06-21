@@ -5,7 +5,7 @@
     'use strict';
 
     angular
-        .module("aglComponents")
+        .module("practiceApp")
         .config(stateConfig);
 
     stateConfig.$inject = ['$stateProvider','$urlRouterProvider'];

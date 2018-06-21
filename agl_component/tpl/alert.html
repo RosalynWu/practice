@@ -1,0 +1,16 @@
+<!--alert-->
+<div>
+    <div agl-alert>默认提示状态</div>
+    <div agl-alert type="info">数据加载中...</div>
+    <div agl-alert type="warning">警告</div>
+    <div agl-alert type="success">成功</div>
+    <div agl-alert type="error" close="close({$event: $event})">可关闭</div>
+
+    <div agl-alert template-url="alert.html"></div>
+    <script type="text/ng-template" id="alert.html">内容通过属性"template-url"添加</script>
+
+    <div agl-alert  dismiss-on-timeout="5000" close="close({$event: $event})">5s后提示框自动消失，添加属性"dismiss-on-titmeout = '5000' "</div>
+
+    <div class="star">星星</div>
+    <div class="star-quick">快点的星星</div>
+</div>

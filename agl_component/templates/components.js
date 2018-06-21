@@ -4,6 +4,6 @@
 (function(){
     'use strict';
 
-    angular.module('agl.components',['agl.dropdown','agl.dropdown.imitate','agl.share']);
+    angular.module('agl.components',['agl.components.tpl','agl.dropdown','agl.dropdown.imitate','agl.share','agl.alert']);
 
 })();

@@ -5,13 +5,10 @@
     'use strict';
 
     angular
-        .module("aglComponents",[
-            'ui.router',
-            'agl.components'
-        ]);
+        .module("practiceApp",['ui.router']);
 
     angular
-        .module("aglComponents")
+        .module("practiceApp")
         .directive('repeatFinished',repeatFinished)
         .directive('holdOnClick',holdOnClick)
         .directive('convertToNumber',convertToNumber);

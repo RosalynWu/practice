@@ -1,0 +1,29 @@
+@import "../scss/global";
+@import "../scss/variable";
+@import "../scss/mixins";
+@import "../scss/function";
+@import "../scss/utilities";
+@import "../scss/dropdown";
+@import "../scss/share";
+@import "../scss/alert";
+@import "../scss/close";
+@import "../scss/buttons";
+@import "../scss/animate";
+
+.disabled{
+  cursor: not-allowed;
+}
+
+.twinkle{
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  -webkit-animation: twinkling 1s infinite ease-in-out;
+  -o-animation: twinkling 1s infinite ease-in-out;
+  animation: twinkling 1s infinite ease-in-out;
+  &.quick{
+    -webkit-animation: twinkling .5s infinite ease-in-out;
+    -o-animation: twinkling .5s infinite ease-in-out;
+    animation: twinkling .5s infinite ease-in-out;
+  }
+}

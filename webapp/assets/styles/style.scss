@@ -8,8 +8,10 @@
 @import "../scss/alert";
 @import "../scss/close";
 @import "../scss/buttons";
+@import "../scss/animate";
+@import "../scss/nav";
 .page-header{
-  height: 70px;
+  height: 50px;
   position: fixed;
   top: 0;
   left: 0;
@@ -49,29 +51,4 @@
     }
   }
 }
-.disabled{
-  cursor: not-allowed;
-}
-.star{
-  -webkit-animation: twinkling 1s infinite ease-in-out
-}
-.star-quick{
-  margin-top: 10px;
-  -webkit-animation: twinkling 0.5s infinite ease-in-out
-}
-@-webkit-keyframes twinkling{
-  0%{
-    background-color: #fff;
-  }
-  100%{
-    background-color: blue;
-  }
-}
-@keyframes twinkling{
-  0%{
-    background-color: #fff;
-  }
-  100%{
-    background-color: blue;
-  }
-}
+

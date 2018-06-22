@@ -1,0 +1,23 @@
+.navbar,.navbar-nav{
+  &:before{
+    display: table;
+    content: '';
+  }
+  &:after{
+    clear: both;
+  }
+}
+.nav{
+  list-style: none;
+  &.navbar-nav{
+    float: left;
+    &.navbar-right{
+      float: right;
+    }
+  }
+}
+.navbar-nav{
+  >li{
+    float: left;
+  }
+}

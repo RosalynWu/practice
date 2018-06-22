@@ -1,9 +1,0 @@
-@function theme-color($key: 'theme'){
-  @return map_get($theme-colors,$key);
-}
-@function theme-color-level($color-name: 'theme', $level: 0){
- $color: theme-color($color-name);
-  $color-base: if($level > 0, $black, $white);
-  $level: abs($level);
-  @return mix($color-base, $color, $level * $theme-color-interval);
-}

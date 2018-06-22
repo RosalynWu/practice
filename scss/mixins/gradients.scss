@@ -1,8 +1,0 @@
-/*normal*/
-@mixin gradient-bg($color){
-  @if($enable-gradients){
-    background-color: $color  linear-gradient((180deg, mix($body-bg,$color,15%)),$color) repeat-x;
-  }@else{
-    background-color: $color;
-  }
-}

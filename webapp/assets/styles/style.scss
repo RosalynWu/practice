@@ -1,0 +1,77 @@
+@import "../scss/global";
+@import "../scss/variable";
+@import "../scss/mixins";
+@import "../scss/function";
+@import "../scss/utilities";
+@import "../scss/dropdown";
+@import "../scss/share";
+@import "../scss/alert";
+@import "../scss/close";
+@import "../scss/buttons";
+.page-header{
+  height: 70px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index:2;
+  background-color: $teal;
+  width: 100%;
+  line-height: 70px;
+  color: $white;
+  padding-left: 20px;
+  font-size: 20px;
+}
+.page-content{
+  margin-top: 70px;
+  .page-sidebar{
+    position: absolute;
+    left: 0;
+    width: 200px;
+    z-index:1;
+    height: 100%;
+    overflow-y: auto;
+    background-color: $gray;
+  }
+  .page-main{
+    padding: 15px 15px 15px 215px;
+  }
+}
+//TODO list-group
+.list-group{
+  margin-top: 31px;
+  .list-group-item{
+    padding: 5px 10px;
+    text-align: center;
+    cursor: pointer;
+    &.active{
+      background-color: $gray-200;
+      color: $gray-500;
+    }
+  }
+}
+.disabled{
+  cursor: not-allowed;
+}
+.star{
+  -webkit-animation: twinkling 1s infinite ease-in-out
+}
+.star-quick{
+  margin-top: 10px;
+  -webkit-animation: twinkling 0.5s infinite ease-in-out
+}
+@-webkit-keyframes twinkling{
+  0%{
+    background-color: #fff;
+  }
+  100%{
+    background-color: blue;
+  }
+}
+@keyframes twinkling{
+  0%{
+    background-color: #fff;
+  }
+  100%{
+    background-color: blue;
+  }
+}

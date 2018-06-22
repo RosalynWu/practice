@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>PRACTICE</title>
     <!--angular 组件-->
-    <link rel="stylesheet" href="assets/styles/agl-components.css"/>
+    <link rel="stylesheet" href="assets/styles/style.css"/>
 </head>
 <body>
     <div ui-view></div>
@@ -15,20 +15,37 @@
     <script type="text/javascript" src="../node_modules/@uirouter/angularjs/release/angular-ui-router.js"></script>
     <!--bower component end-->
 
-    <!--components-->
-    <!--<script type="text/javascript" src="templates/position/position.js"></script>-->
-    <!--<script type="text/javascript" src="templates/multiMap/multiMap.js"></script>-->
-    <!--<script type="text/javascript" src="templates/dropdown/dropdown.js"></script>-->
-    <!--<script type="text/javascript" src="templates/dropdown/dropdown.imitate.js"></script>-->
-    <!--<script type="text/javascript" src="templates/share/share.js"></script>-->
-    <!--<script type="text/javascript" src="templates/alert/alert.js"></script>-->
-    <!--<script type="text/javascript" src="templates/components.js"></script>-->
-    <!--<script type="text/javascript" src="templates/components.tpl.js"></script>-->
-    <!--components end-->
+    <!--angular components-->
+    <script type="text/javascript" src="pages/agl_component/components/position/position.js"></script>
+    <script type="text/javascript" src="pages/agl_component/components/multiMap/multiMap.js"></script>
+    <script type="text/javascript" src="pages/agl_component/components/dropdown/dropdown.js"></script>
+    <script type="text/javascript" src="pages/agl_component/components/dropdown/dropdown.imitate.js"></script>
+    <script type="text/javascript" src="pages/agl_component/components/share/share.js"></script>
+    <script type="text/javascript" src="pages/agl_component/components/alert/alert.js"></script>
+    <script type="text/javascript" src="pages/agl_component/components.js"></script>
+    <script type="text/javascript" src="pages/agl_component/components.tpl.js"></script>
+    <!--angular components end-->
 
     <!--app js-->
     <script type="text/javascript" src="app.module.js"></script>
     <script type="text/javascript" src="app.state.js"></script>
     <!--app js end-->
+
+    <!--common directives-->
+    <script type="text/javascript" src="directives/header/header.js"></script>
+    <script type="text/javascript" src="directives/header/header.controller.js"></script>
+    <script type="text/javascript" src="directives/sidebar/sidebar.js"></script>
+    <!--common directives end-->
+
+    <!--pages-->
+    <!--state-->
+    <script type="text/javascript" src="pages/homepage/homepage.state.js"></script>
+    <script type="text/javascript" src="pages/agl_component/home.state.js"></script>
+    <script type="text/javascript" src="pages/data_mutual/home.state.js"></script>
+    <script type="text/javascript" src="pages/internal/internal.state.js"></script>
+    <!--controller-->
+    <script type="text/javascript" src="pages/agl_component/home.controller.js"></script>
+    <!--pages end-->
+
 </body>
 </html>

@@ -1,5 +1,0 @@
-@mixin alert-gradient($background, $border, $color){
-  color: $color;
-  @include gradient-bg($background);
-  border-color:$border;
-}
